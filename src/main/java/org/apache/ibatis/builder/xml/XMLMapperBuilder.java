@@ -383,6 +383,9 @@ public class XMLMapperBuilder extends BaseBuilder {
     return null;
   }
 
+  /**
+   * 进行真正的绑定
+   */
   private void bindMapperForNamespace() {
     String namespace = builderAssistant.getCurrentNamespace();
     if (namespace != null) {

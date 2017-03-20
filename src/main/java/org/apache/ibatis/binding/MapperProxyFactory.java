@@ -22,9 +22,15 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.ibatis.session.SqlSession;
 
+/**
+ * Mapper代理 工厂类
+ * @param <T>
+ */
 public class MapperProxyFactory<T> {
 
+  //要生成的接口类
   private final Class<T> mapperInterface;
+  //接口方法缓存
   private Map<Method, MapperMethod> methodCache = new ConcurrentHashMap<Method, MapperMethod>();
 
   public MapperProxyFactory(Class<T> mapperInterface) {
@@ -41,6 +47,7 @@ public class MapperProxyFactory<T> {
 
   @SuppressWarnings("unchecked")
   protected T newInstance(MapperProxy<T> mapperProxy) {
+    //动态代理我们写的dao接口
     return (T) Proxy.newProxyInstance(mapperInterface.getClassLoader(), new Class[] { mapperInterface }, mapperProxy);
   }
 

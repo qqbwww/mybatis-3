@@ -29,6 +29,9 @@ import java.lang.reflect.Array;
 import java.lang.reflect.Method;
 import java.util.*;
 
+/**
+ * 先判断CRUD类型，然后根据类型去选择到底执行sqlSession中的哪个方法
+ */
 public class MapperMethod {
 
   private final SqlCommand command;

@@ -15,6 +15,12 @@
  */
 package org.apache.ibatis.session;
 
+/**
+ * 执行类型
+ * 1.简单
+ * 2.重用
+ * 3.批处理
+ */
 public enum ExecutorType {
   SIMPLE, REUSE, BATCH
 }

@@ -20,7 +20,10 @@ import java.sql.SQLException;
 
 /**
  * Wraps a database connection.
- * Handles the connection lifecycle that comprises: its creation, preparation, commit/rollback and close. 
+ * Handles the connection lifecycle that comprises: its creation, preparation, commit/rollback and close.
+ *
+ * 包装一个数据库连接
+ * 处理连接的生命周期，包括：创建，准备，提交，回滚和关闭
  *
  */
 public interface Transaction {

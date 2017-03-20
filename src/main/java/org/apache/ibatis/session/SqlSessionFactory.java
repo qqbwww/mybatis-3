@@ -17,6 +17,9 @@ package org.apache.ibatis.session;
 
 import java.sql.Connection;
 
+/**
+ * 每个数据库对应一个SqlSessionFactory实例
+ */
 public interface SqlSessionFactory {
 
   SqlSession openSession();

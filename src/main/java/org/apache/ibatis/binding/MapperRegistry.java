@@ -26,15 +26,26 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+/**
+ * 保存Mapper接口信息。执行一些列操作利用JDK动态代理生成Mapper的动态代理类
+ */
 public class MapperRegistry {
 
   private Configuration config;
+  //
   private final Map<Class<?>, MapperProxyFactory<?>> knownMappers = new HashMap<Class<?>, MapperProxyFactory<?>>();
 
   public MapperRegistry(Configuration config) {
     this.config = config;
   }
 
+  /**
+   * 获取Mapper与sqlSession绑定，MaperProxyFactory实例化一个动态代理类
+   * @param type
+   * @param sqlSession
+   * @param <T>
+   * @return
+   */
   @SuppressWarnings("unchecked")
   public <T> T getMapper(Class<T> type, SqlSession sqlSession) {
     final MapperProxyFactory<T> mapperProxyFactory = (MapperProxyFactory<T>) knownMappers.get(type);

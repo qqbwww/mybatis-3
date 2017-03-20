@@ -75,12 +75,21 @@ public class DefaultSqlSessionFactory implements SqlSessionFactory {
     return configuration;
   }
 
+  /**
+   * 从数据库打开一个Session
+   * @param execType
+   * @param level
+   * @param autoCommit
+   * @return
+   */
   private SqlSession openSessionFromDataSource(ExecutorType execType, TransactionIsolationLevel level, boolean autoCommit) {
     Transaction tx = null;
     try {
+      //通过Confuguration对象去获取MyBatis相关配置信息，Environment对象包含了数据源和事务的配置
       final Environment environment = configuration.getEnvironment();
       final TransactionFactory transactionFactory = getTransactionFactoryFromEnvironment(environment);
       tx = transactionFactory.newTransaction(environment.getDataSource(), level, autoCommit);
+      //sqlSession通过executor执行sql，executor是对Statement的封装
       final Executor executor = configuration.newExecutor(tx, execType, autoCommit);
       return new DefaultSqlSession(configuration, executor);
     } catch (Exception e) {

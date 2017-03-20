@@ -22,6 +22,10 @@ import java.util.Map;
 
 import org.apache.ibatis.session.SqlSession;
 
+/**
+ * 通过该类代理我们的dao，执行dao的方法时，是对应的mapperProxy在代理
+ * @param <T>
+ */
 public class MapperProxy<T> implements InvocationHandler, Serializable {
 
   private static final long serialVersionUID = -6424540398559729838L;
@@ -35,6 +39,14 @@ public class MapperProxy<T> implements InvocationHandler, Serializable {
     this.methodCache = methodCache;
   }
 
+  /**
+   * MapperProxy在执行时会触发此方法
+   * @param proxy
+   * @param method
+   * @param args
+   * @return
+   * @throws Throwable
+   */
   public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
     if (Object.class.equals(method.getDeclaringClass())) {
       return method.invoke(this, args);
@@ -42,6 +54,7 @@ public class MapperProxy<T> implements InvocationHandler, Serializable {
     final MapperMethod mapperMethod = cachedMapperMethod(method);
     return mapperMethod.execute(sqlSession, args);
   }
+
 
   private MapperMethod cachedMapperMethod(Method method) {
     MapperMethod mapperMethod = methodCache.get(method);

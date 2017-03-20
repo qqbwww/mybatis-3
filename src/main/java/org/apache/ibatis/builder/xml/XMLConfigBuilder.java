@@ -42,6 +42,9 @@ import org.apache.ibatis.session.LocalCacheScope;
 import org.apache.ibatis.transaction.TransactionFactory;
 import org.apache.ibatis.type.JdbcType;
 
+/**
+ * 配置构建器
+ */
 public class XMLConfigBuilder extends BaseBuilder {
 
   private boolean parsed;
@@ -90,8 +93,13 @@ public class XMLConfigBuilder extends BaseBuilder {
     return configuration;
   }
 
+  /**
+   * 解析configuration.xml创建Configuration类最核心的方法
+   * @param root
+   */
   private void parseConfiguration(XNode root) {
     try {
+      //加载资源文件属性和当前文件属性
       propertiesElement(root.evalNode("properties")); //issue #117 read properties first
       typeAliasesElement(root.evalNode("typeAliases"));
       pluginElement(root.evalNode("plugins"));
@@ -101,6 +109,7 @@ public class XMLConfigBuilder extends BaseBuilder {
       environmentsElement(root.evalNode("environments")); // read it after objectFactory and objectWrapperFactory issue #631
       databaseIdProviderElement(root.evalNode("databaseIdProvider"));
       typeHandlerElement(root.evalNode("typeHandlers"));
+      //解析Mapper标签内容
       mapperElement(root.evalNode("mappers"));
     } catch (Exception e) {
       throw new BuilderException("Error parsing SQL Mapper Configuration. Cause: " + e, e);
@@ -302,9 +311,15 @@ public class XMLConfigBuilder extends BaseBuilder {
     }
   }
 
+  /**
+   * 解析Mapper标签
+   * @param parent
+   * @throws Exception
+   */
   private void mapperElement(XNode parent) throws Exception {
     if (parent != null) {
       for (XNode child : parent.getChildren()) {
+        //将一个包中的所有接口注册为Mapper
         if ("package".equals(child.getName())) {
           String mapperPackage = child.getStringAttribute("name");
           configuration.addMappers(mapperPackage);
@@ -312,16 +327,19 @@ public class XMLConfigBuilder extends BaseBuilder {
           String resource = child.getStringAttribute("resource");
           String url = child.getStringAttribute("url");
           String mapperClass = child.getStringAttribute("class");
+          //使用相对路径获取Mapper配置文件
           if (resource != null && url == null && mapperClass == null) {
             ErrorContext.instance().resource(resource);
             InputStream inputStream = Resources.getResourceAsStream(resource);
             XMLMapperBuilder mapperParser = new XMLMapperBuilder(inputStream, configuration, resource, configuration.getSqlFragments());
             mapperParser.parse();
+            //绝对路径
           } else if (resource == null && url != null && mapperClass == null) {
             ErrorContext.instance().resource(url);
             InputStream inputStream = Resources.getUrlAsStream(url);
             XMLMapperBuilder mapperParser = new XMLMapperBuilder(inputStream, configuration, url, configuration.getSqlFragments());
             mapperParser.parse();
+            //使用Mapper接口
           } else if (resource == null && url == null && mapperClass != null) {
             Class<?> mapperInterface = Resources.classForName(mapperClass);
             configuration.addMapper(mapperInterface);

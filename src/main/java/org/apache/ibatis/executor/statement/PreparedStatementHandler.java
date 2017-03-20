@@ -51,6 +51,14 @@ public class PreparedStatementHandler extends BaseStatementHandler {
     ps.addBatch();
   }
 
+  /**
+   * 真正执行的地方
+   * @param statement
+   * @param resultHandler
+   * @param <E>
+   * @return
+   * @throws SQLException
+   */
   public <E> List<E> query(Statement statement, ResultHandler resultHandler) throws SQLException {
     PreparedStatement ps = (PreparedStatement) statement;
     ps.execute();
